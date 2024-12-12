@@ -5,8 +5,8 @@ module.exports = async function executeQuery(query, params = []) {
 
     try {
         connection = await oracledb.getConnection({
-            user: process.env.DB_USER || 'excel07',
-            password: process.env.DB_PASSWORD || 'excas07',
+            user: process.env.DB_USER || 'neovia',
+            password: process.env.DB_PASSWORD || 'megamega',
             connectString: process.env.DB_CONNECT_STRING || '10.13.40.122:1521/mega07.vncneoviapriv.vcnneovia.oraclevcn.com',
         });
 
