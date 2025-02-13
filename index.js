@@ -17,26 +17,7 @@ try {
 
 app.get('/contrato/domicilio', async (req, res) => {
     try {
-        const result = await executeQuery("select \n" +
-            "  sysdate job_dt_hora,\n" +
-            "  a.agn_st_nome, \n" +
-            "  a.agn_in_codigo,\n" +
-            "  c.ban_in_numero, \n" +
-            "  g.age_st_numero, \n" +
-            "  c.cta_st_numero\n" +
-            "from glo_agentes a\n" +
-            "inner join glo_contasfin c\n" +
-            " on a.agn_tab_in_codigo = c.agn_tab_in_codigo\n" +
-            "and a.agn_pad_in_codigo = c.agn_pad_in_codigo\n" +
-            "and a.agn_in_codigo     = c.agn_in_codigo\n" +
-            "inner join glo_agencia g\n" +
-            " on c.ban_in_numero = g.ban_in_numero\n" +
-            "and c.age_in_codigo = g.age_in_codigo\n" +
-            "inner join alx_glocontafinprogramacao f\n" +
-            " on a.agn_tab_in_codigo = f.agn_tab_in_codigo\n" +
-            "and a.agn_pad_in_codigo = f.agn_pad_in_codigo\n" +
-            "and a.agn_in_codigo     = f.agn_in_codigo\n" +
-            "where f.agn_bo_domicilio = 'S'");
+        const result = await executeQuery("select * from NEO_VW_DOMICILIO_BANCARIO ");
         res.json(result);
     } catch (err) {
         res.status(500).json({error: 'Erro ao executar a consulta.', details: err.message});
@@ -524,7 +505,35 @@ app.get('/contrato/sare', async (req, res) => {
     }
 });
 
+app.get('/contrato/centro-custo/projeto/:reduzido', async (req, res) => {
+    try {
+        let { reduzido } = req.params;
+        if(!reduzido){
+            return res.status(400).json({error: "Parâmetros em branco!!!!"})
+        };
+
+        reduzido = isNaN(reduzido) ? reduzido : Number(reduzido);
+
+        let sqlQuery = `select * from neo_vw_dados_contratos where cus_in_reduzido = :1`;
+
+        const result = await executeQuery(sqlQuery, [reduzido]);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({error: 'Erro ao executar a consulta.', details: err.message});
+    }
+});
+
 app.get('/contrato/centro-custo/projeto', async (req, res) => {
+    try {
+        const result = await executeQuery("select * from neo_vw_dados_contratos ");
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({error: 'Erro ao executar a consulta.', details: err.message});
+    }
+});
+
+
+app.get('/contrato/centro-custo/projeto/apagar', async (req, res) => {
     try {
         const result = await executeQuery("select\n" +
             "sysdate job_dt_hora,\n" +
